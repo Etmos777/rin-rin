@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Custom Digital Card - A Love Letter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for a friendly look */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fef0f8; /* Very light pink background fallback */
+            /* REMOVED FLEXBOX PROPERTIES: */
+            /* display: flex; */
+            /* justify-content: center; */
+            /* align-items: center; */
+            min-height: 100vh; /* Keep this to ensure body is at least full height */
+            margin: 0;
+            padding: 20px; /* Add some padding around the card */
+            box-sizing: border-box; /* Include padding in element's total width/height */
+            position: relative; /* For absolutely positioned hearts */
+            /* Allow scrolling by default */
+        }
+
+        .card-container {
+            /* Add margin auto for horizontal centering when body isn't flex */
+            margin-left: auto;
+            margin-right: auto;
+            /* Keep max-w-4xl and w-full from Tailwind for width control */
+            max-width: 4xl; /* Tailwind class equivalent for max-width */
+            width: 100%; /* Tailwind class equivalent for width */
+
+            /* Maintain other card styles */
+            background-color: white;
+            box-shadow: 0 20px 25px -5px rgba(254,226,239,0.5), 0 8px 10px -6px rgba(254,226,239,0.5); /* shadow-2xl shadow-rose-200 */
+            border-radius: 1.5rem; /* rounded-3xl */
+            padding: 2rem; /* p-8 */
+            display: flex; /* Keep flexbox for internal layout of image/content sections */
+            flex-direction: column; /* flex-col */
+            /* On md screens, switch to row */
+            @media (min-width: 768px) {
+                flex-direction: row; /* md:flex-row */
+                space-x: 3rem; /* md:space-x-12 (tailwind) */
+                align-items: center; /* md:items-center */
+            }
+
+            space-y: 2rem; /* space-y-8 */
+            /* On md screens, remove space-y */
+            @media (min-width: 768px) {
+                space-y: 0; /* md:space-y-0 */
+            }
+
+            transform: scale(1); /* transform */
+            transition: transform 0.3s ease-in-out; /* transition-transform duration-300 ease-in-out */
+        }
+        .card-container:hover {
+            transform: scale(1.05); /* hover:scale-105 */
+        }
+
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 640px) {
+            .card-container {
+                flex-direction: column; /* Stack content vertically on small screens */
+                padding: 1rem; /* Adjust padding */
+            }
+            .card-content {
+                width: 100%; /* Full width for content */
+                /* Removed specific scrollbar for card-content, as the body will now scroll */
+            }
+            .card-image-section {
+                width: 100%; /* Full width for images */
+            }
+            .main-image {
+                height: 200px; /* Adjust image height for mobile */
+            }
+            /* Make gallery images more responsive on small screens */
+            .gallery-image {
+                height: 120px; /* Slightly reduce height for better fit on small screens */
+                object-fit: cover; /* Ensure they still cover their space */
+            }
+            /* Adjust the gap in the grid of gallery images for smaller screens */
+            .grid.gap-4 {
+                gap: 1rem; /* Smaller gap on mobile */
+            }
+        }
+
+        /* --- Animations --- */
+
+        /* Text fade-in and slide-in animation */
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-slide-up {
+            animation: fadeInSlideUp 1s ease-out forwards;
+            opacity: 0; /* Start hidden */
+        }
+
+        /* Delay for sequential animations */
+        .animate-fade-in-slide-up.delay-1 { animation-delay: 0.3s; }
+        .animate-fade-in-slide-up.delay-2 { animation-delay: 0.6s; }
+
+        /* Floating Hearts Animation */
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -50px; /* Start below the viewport */
+            font-size: 20px;
+            color: #ef4444; /* Tailwind red-500 */
+            opacity: 0;
+            animation-name: floatUp;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            animation-duration: 10s; /* Adjust duration for slower/faster float */
+            pointer-events: none; /* Make hearts unclickable */
+            text-shadow: 0 0 5px rgba(255,255,255,0.7); /* Subtle glow */
+        }
+
+        /* Delay and position for individual hearts */
+        .heart:nth-child(1) { left: 10%; animation-duration: 9s; animation-delay: 0s; font-size: 22px; }
+        .heart:nth-child(2) { left: 25%; animation-duration: 11s; animation-delay: 1s; font-size: 18px; }
+        .heart:nth-child(3) { left: 40%; animation-duration: 10s; animation-delay: 2s; font-size: 25px; }
+        .heart:nth-child(4) { left: 55%; animation-duration: 12s; animation-delay: 0.5s; font-size: 20px; }
+        .heart:nth-child(5) { left: 70%; animation-duration: 8s; animation-delay: 1.5s; font-size: 23px; }
+        .heart:nth-child(6) { left: 85%; animation-duration: 13s; animation-delay: 2.5s; font-size: 19px; }
+
+        /* Enhanced button hover effect */
+        .button-hover-effect {
+            transition: all 0.3s ease-in-out;
+            background-size: 200% auto;
+        }
+        .button-hover-effect:hover {
+            background-position: right center; /* Change the gradient position */
+            box-shadow: 0 10px 20px rgba(236, 72, 153, 0.4); /* Deeper shadow */
+            transform: translateY(-3px) scale(1.02); /* Slight lift and scale */
+        }
+
+    </style>
+</head>
+<body class="bg-gradient-to-br from-pink-50 to-rose-100 min-h-screen p-4">
+    <div class="heart">&#x2764;</div> <div class="heart">&#x2764;</div>
+    <div class="heart">&#x2764;</div>
+    <div class="heart">&#x2764;</div>
+    <div class="heart">&#x2764;</div>
+    <div class="heart">&#x2764;</div>
+
+
+    <div class="card-container bg-white shadow-2xl shadow-rose-200 rounded-3xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12 transform hover:scale-105 transition-transform duration-300 ease-in-out">
+
+        <div class="card-image-section w-full md:w-1/2 flex flex-col items-center space-y-4">
+            <img
+                src="https://live.staticflickr.com/65535/54601853440_e3727f070b_b.jpg"
+                alt="Main Custom Card Photo"
+                class="main-image w-full h-auto object-cover rounded-2xl shadow-lg border-4 border-rose-200 transition-all duration-300 ease-in-out hover:shadow-xl hover:border-rose-300"
+                onerror="this.onerror=null;this.src='https://placehold.co/400x300/cccccc/333333?text=Image+Unavailable';"
+            >
+            <div class="grid grid-cols-2 gap-4 w-full">
+                <img
+                    src="https://live.staticflickr.com/65535/54601762378_d3cc404c1f_b.jpg"
+                    alt="Gallery Photo 1"
+                    class="w-full h-32 object-cover rounded-xl shadow-md border-2 border-rose-100 hover:shadow-lg hover:border-rose-200 transition-all duration-300 ease-in-out gallery-image"
+                    onerror="this.onerror=null;this.src='https://placehold.co/150x150/cccccc/333333?text=Image+Unavailable';"
+                >
+                <img
+                    src="https://live.staticflickr.com/65535/54601551166_5d94f8be79_m.jpg"
+                    alt="Gallery Photo 2"
+                    class="w-full h-32 object-cover rounded-xl shadow-md border-2 border-rose-100 hover:shadow-lg hover:border-rose-200 transition-all duration-300 ease-in-out gallery-image"
+                    onerror="this.onerror=null;this.src='https://placehold.co/150x150/cccccc/333333?text=Image+Unavailable';"
+                >
+            </div>
+        </div>
+
+       <div class="card-content w-full md:w-1/2 text-justify space-y-6">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-rose-700 leading-tight animate-fade-in-slide-up">
+                Happy Half a Year with you Rin!
+            </h1>
+            <div class="text-lg md:text-xl text-gray-700 leading-relaxed mt-4 animate-fade-in-slide-up delay-1 space-y-4">
+                <p>
+                    Hi bebi! Happy 6 months! RAAAAAAAAA!!!!! Hehe, sorry it's a bit late, but I'm not used to coding in HTML. Oh well, anyways, I'm so happy that I am still with you. I know it hasn't been easy, especially these past few months, but I'm glad we're hanging on together.
+                </p>
+                <p>
+                    I'm glad you haven't given up on me, even though I'm so maingay and can only focus on one thing at a time. I thank you for being **patient, kind, and very loving** whenever you are with me. I'm super blessed to have met you at a moment that I just went with the flow to.
+                </p>
+                <p>
+                    To be honest, I just wanted to meet you at first because I was interested in you for being a **Japanese athlete**, can you believe that babe? HAHAA! The moment I first saw you, Goddddd, you looked so beautiful, and I tried to act cool around you, not even trying to look at your face. But even then, I could see by the edge of my eyes you were so pretty.
+                </p>
+                <p>
+                    After all that, I managed to muster up my courage to finally talk to you, and I'm so glad I did because I would never have gotten to know you. I know I said that I never wanted to be set up, but here I am with you. I guess that makes you my **only exception**, the one I hope to never lose.
+                </p>
+                <p>
+                    I'm so glad to be in this relationship with you, and I hope this is just the beginning, from 6 months to a year, then 2 years, then half a decade and so on! **I love you, Czarina Shzny Quimora.** Take care my sweet Girl. Sending my love to you.
+                </p>
+            </div>
+            <p class="text-base text-gray-600 mt-2 italic animate-fade-in-slide-up delay-2">
+                "Sending you warm wishes and thinking of you always."
+            </p>
+            <div class="mt-6">
+                <a href="#" class="inline-block bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold py-3 px-8 rounded-full shadow-lg button-hover-effect">
+                    Love you
+                </a>
+            </div>
+            <div class="text-sm text-gray-500 mt-8">
+                <p>&copy; 2025 Created with love.</p>
+                <p>To my dearest Rin.</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
